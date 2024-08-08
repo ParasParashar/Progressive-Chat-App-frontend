@@ -61,7 +61,13 @@ const VideoCallPage = () => {
   );
 
   const handleCallAccepted = useCallback(
-    async ({ from, ans }: { from: string; ans: RTCSessionDescriptionInit }) => {
+    async ({
+      from,
+      ans,
+    }: {
+      from?: string;
+      ans: RTCSessionDescriptionInit;
+    }) => {
       await peer.setLocalDescription(ans);
       setCallStarted(true);
     },
@@ -80,7 +86,7 @@ const VideoCallPage = () => {
   }, [handleNegoNeeded]);
 
   const handleNegoNeedIncoming = useCallback(
-    async ({ from, offer }) => {
+    async ({ from, offer }: any) => {
       const ans = await peer.getAnswer(offer);
       socket?.emit("peer:nego:done", { to: from, ans });
     },

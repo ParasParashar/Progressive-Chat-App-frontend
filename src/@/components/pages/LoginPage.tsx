@@ -19,10 +19,13 @@ const LoginPage = () => {
   const { mutate, isError, isPending, error } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await axios.post("/api/auth/login", {
-          username: formInput.username,
-          password: formInput.password,
-        });
+        const res = await axios.post(
+          "https://progressive-chat-app.onrender.com/api/auth/login",
+          {
+            username: formInput.username,
+            password: formInput.password,
+          }
+        );
 
         if (res.status >= 400) {
           throw new Error(res.data.error || "Failed to login");

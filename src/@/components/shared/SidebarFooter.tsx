@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import { FaSpinner } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import toast from "react-hot-toast";
 import { User } from "../../../types/type";
 
@@ -13,7 +14,7 @@ const SidebarFooter = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       try {
-        const { data } = await axios.post("/api/auth/logout");
+        const { data } = await AxiosBase.post("/api/auth/logout");
         if (data.error) throw new Error(data.error);
         return data;
       } catch (error: any) {

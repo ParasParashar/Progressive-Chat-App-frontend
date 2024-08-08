@@ -1,7 +1,8 @@
 import MessageCard from "./MessageCard";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import useConversation from "../../../hooks/useConversation";
 import { useEffect, useRef } from "react";
 import { FaComments, FaSpinner } from "react-icons/fa";
@@ -28,7 +29,7 @@ const MessagesContainer = () => {
     queryKey: ["getMessage", id],
     queryFn: async () => {
       try {
-        const res = await axios.get(`/api/messages/${id}`);
+        const res = await AxiosBase.get(`/api/messages/${id}`);
         if (!res.data) throw new Error("Error in getting" || error?.message);
         return res.data;
       } catch (err: any) {
@@ -84,7 +85,7 @@ const MessagesContainer = () => {
   // mutation for updating the seen status
   const { mutate } = useMutation({
     mutationFn: async ({ messageId }: { messageId: string }) => {
-      const res = await axios.patch(`/api/messages/update/${id}`, {
+      const res = await AxiosBase.patch(`/api/messages/update/${id}`, {
         messageId,
       });
       if (res.data.error) throw new Error(res.data.error);

@@ -3,7 +3,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import useConversation from "../../../hooks/useConversation";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "../Loaders/LoadingSpinner";
@@ -36,7 +37,7 @@ const MenuPopover = ({ type, conversationId }: props) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       try {
-        const { data } = await axios.delete(endPoint);
+        const { data } = await AxiosBase.delete(endPoint);
 
         if (data.error) throw new Error(data.error || "deleting error");
         return data;

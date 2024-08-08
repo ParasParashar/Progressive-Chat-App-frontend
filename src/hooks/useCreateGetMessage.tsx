@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { MessageType, SidebarData, User, UserMessageType } from "../types/type";
 import { useEffect } from "react";
 import { useSocketContext } from "../@/components/providers/SocketProvider";
+import AxiosBase from "../utils/axios";
 
 export const useCreateMessage = () => {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export const useCreateMessage = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (message: string) => {
-      const res = await axios.post(`/api/messages/send/${id}`, { message });
+      const res = await AxiosBase.post(`/api/messages/send/${id}`, { message });
       if (!res.data) throw new Error("Error in sending message");
       return res.data;
     },

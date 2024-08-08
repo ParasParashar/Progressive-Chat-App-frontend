@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { FaSpinner } from "react-icons/fa";
+import AxiosBase from "../../../utils/axios";
 
 const LoginPage = () => {
   const [formInput, setFormInput] = useState({
@@ -19,7 +19,7 @@ const LoginPage = () => {
   const { mutate, isError, isPending, error } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await axios.post("/api/auth/login", {
+        const res = await AxiosBase.post("/api/auth/login", {
           username: formInput.username,
           password: formInput.password,
         });

@@ -6,7 +6,8 @@ import { User } from "../../../types/type";
 import { Button } from "../ui/button";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { cn } from "../../lib/utils";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useSidebarHook from "../../../hooks/useSidebarHook";
@@ -94,7 +95,7 @@ export default function GroupCreation() {
   // mutation
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const res = await axios.post("/api/group/create", {
+      const res = await AxiosBase.post("/api/group/create", {
         name: name,
         members: selectUser.map((item) => item.userId),
       });

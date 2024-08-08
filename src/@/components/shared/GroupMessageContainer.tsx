@@ -9,7 +9,8 @@ import {
   SidebarData,
   User,
 } from "../../../types/type";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import { formatDayOnly } from "../../../utils/date";
 import GroupMessageCard from "./GroupMessageCard";
 import { useSocketContext } from "../providers/SocketProvider";
@@ -28,7 +29,7 @@ const GroupMessageContainer = () => {
     queryKey: ["getGroupMessage", groupId],
     queryFn: async () => {
       try {
-        const res = await axios.get(`/api/group/message/${groupId}`);
+        const res = await AxiosBase.get(`/api/group/message/${groupId}`);
         if (!res.data) throw new Error("Error in getting" || error?.message);
         return res.data;
       } catch (err: any) {
@@ -84,7 +85,7 @@ const GroupMessageContainer = () => {
   // mutation for updating the seen status
   const { mutate } = useMutation({
     mutationFn: async ({ messageId }: { messageId: string }) => {
-      const res = await axios.patch("/api/group/message/update", {
+      const res = await AxiosBase.patch("/api/group/message/update", {
         messageId,
         groupId,
       });

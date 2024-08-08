@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { GroupMessageT, GroupMessageType } from "../types/type";
 import { useEffect } from "react";
 import { useSocketContext } from "../@/components/providers/SocketProvider";
+import AxiosBase from "../utils/axios";
 
 export const useCreateGroupMessage = () => {
   const { id: groupId } = useParams();
@@ -12,7 +12,7 @@ export const useCreateGroupMessage = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (message: string) => {
-      const res = await axios.post(`/api/group/message/send/${groupId}`, {
+      const res = await AxiosBase.post(`/api/group/message/send/${groupId}`, {
         message,
       });
       if (!res.data) throw new Error("Error in sending message");

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 
@@ -41,7 +42,7 @@ const SignUpPage = () => {
       Gender,
     }: formDataProps) => {
       try {
-        const { data } = await axios.post("/api/auth/signup", {
+        const { data } = await AxiosBase.post("/api/auth/signup", {
           fullname,
           username,
           password,

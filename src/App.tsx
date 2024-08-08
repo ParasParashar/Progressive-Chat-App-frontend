@@ -11,11 +11,15 @@ import GroupMessagePage from "./@/components/pages/GroupMessagePage";
 import VideoCallPage from "./@/components/pages/VideoCallPage";
 
 export default function App() {
+  const url =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:4000"
+      : import.meta.env.VITE_BACKEND_URL;
   const { data: authUser, isLoading } = useQuery<User>({
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await fetch("/api/auth/me");
+        const res = await fetch(url + "/api/auth/me");
         const data = await res.json();
         if (data.error) return null;
         if (!res.ok) {

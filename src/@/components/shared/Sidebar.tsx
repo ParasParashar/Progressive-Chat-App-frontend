@@ -1,6 +1,7 @@
 import SidebarItem from "./SidebarItem";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import { UserSkeleton } from "../Loaders/UserSkeleton";
 import {
   GroupMessageT,
@@ -24,7 +25,7 @@ export default function Sidebar() {
     queryKey: ["conversations"],
     queryFn: async () => {
       try {
-        const { data } = await axios.get("/api/messages/conversations");
+        const { data } = await AxiosBase.get("/api/messages/conversations");
         if (data.error) {
           throw new Error(data.error);
         }

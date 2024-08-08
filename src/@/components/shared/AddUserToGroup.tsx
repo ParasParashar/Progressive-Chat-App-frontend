@@ -18,7 +18,8 @@ import { IoIosPersonAdd } from "react-icons/io";
 import { cn } from "../../lib/utils";
 import { UserSkeleton } from "../Loaders/UserSkeleton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import toast from "react-hot-toast";
 
 type groupProps = {
@@ -60,7 +61,7 @@ const AddUsersToGroup = ({ groupName, members, groupId }: groupProps) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await axios.post("/api/group/addmembers", {
+        const res = await AxiosBase.post("/api/group/addmembers", {
           groupId,
           members: selectUser,
         });

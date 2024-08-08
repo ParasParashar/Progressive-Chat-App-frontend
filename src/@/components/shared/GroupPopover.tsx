@@ -1,7 +1,8 @@
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CiMenuKebab } from "react-icons/ci";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaUser } from "react-icons/fa";
@@ -19,7 +20,7 @@ const GroupPopover = ({ groupId, userId, groupMemberId }: props) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async (type: mutationType) => {
       try {
-        const { data } = await axios.patch("/api/group/info/update", {
+        const { data } = await AxiosBase.patch("/api/group/info/update", {
           groupId: groupId,
           userId: userId,
           groupMemberId: groupMemberId,

@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import GroupInfoSidebar from "../shared/GroupInfoSidebar";
 import { useQuery } from "@tanstack/react-query";
 import { GroupInfo, MemberType, User } from "../../../types/type";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
 
 export default function GroupMessagePage() {
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
@@ -20,7 +20,7 @@ export default function GroupMessagePage() {
   const { data, isLoading } = useQuery<GroupInfo>({
     queryKey: ["groupInfo"],
     queryFn: async () => {
-      const res = await axios.get(`/api/group/info/${groupId}`);
+      const res = await AxiosBase.get(`/api/group/info/${groupId}`);
       if (res.data.error)
         throw new Error(res.data.error || "Error in getting the group info");
       return res.data;

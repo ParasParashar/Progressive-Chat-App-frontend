@@ -8,7 +8,8 @@ import GroupInfoCard from "./GroupInfoCard";
 import { BiTrash } from "react-icons/bi";
 import { CiLogout } from "react-icons/ci";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import AxiosBase from "../../../utils/axios";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { formatGroupDate } from "../../../utils/date";
 import { GroupInfo, MemberType, User } from "../../../types/type";
@@ -26,7 +27,7 @@ const GroupInfoSidebar = () => {
   const { mutate: leaveGroup, isPending: isLeavePending } = useMutation({
     mutationFn: async () => {
       try {
-        const { data } = await axios.post("/api/group/leave", {
+        const { data } = await AxiosBase.post("/api/group/leave", {
           groupId: groupId,
           userId: authUser?.id,
         });
@@ -49,7 +50,7 @@ const GroupInfoSidebar = () => {
   const { mutate: deleteGroup, isPending: isDeletePending } = useMutation({
     mutationFn: async () => {
       try {
-        const { data } = await axios.delete(`/api/group/delete/${groupId}`);
+        const { data } = await AxiosBase.delete(`/api/group/delete/${groupId}`);
 
         if (data.error) throw new Error(data.error || "Deleting group error");
         return data;

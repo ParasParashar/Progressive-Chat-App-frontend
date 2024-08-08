@@ -1,4 +1,3 @@
-import axios from "axios";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -26,7 +25,7 @@ interface ConversationState {
 //             conversation?.type === "user"
 //               ? `/api/auth/userdata/${conversation?.id}`
 //               : `/api/group/groupdata/${conversation?.id}`;
-//           const response = await axios.get(url);
+//           const response = await AxiosBase.
 //           console.log(response.data);
 //           set({ selectedConversation: response.data });
 //         } catch (error) {

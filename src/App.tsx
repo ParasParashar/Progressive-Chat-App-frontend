@@ -9,23 +9,16 @@ import PageLoader from "./@/components/Loaders/PageLoader";
 import { User } from "./types/type";
 import GroupMessagePage from "./@/components/pages/GroupMessagePage";
 import VideoCallPage from "./@/components/pages/VideoCallPage";
+import AxiosBase from "./utils/axios";
 
 export default function App() {
-  const url =
-    import.meta.env.MODE === "development"
-      ? "http://localhost:4000"
-      : import.meta.env.VITE_BACKEND_URL;
   const { data: authUser, isLoading } = useQuery<User>({
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await fetch(url + "/api/auth/me");
-        const data = await res.json();
-        if (data.error) return null;
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
-        }
-        return data;
+        const res = await AxiosBase("/api/auth/me");
+        if (res.data.error) return null;
+        return res.data;
       } catch (error: any) {
         throw new Error(error.message);
       }

@@ -11,7 +11,7 @@ interface socketInterface {
 const SOCKET_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
-    : process.env.VITE_BACKEND_URL;
+    : import.meta.env.VITE_BACKEND_URL;
 
 const SocketContext = createContext<socketInterface | undefined>(undefined);
 

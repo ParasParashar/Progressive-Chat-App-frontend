@@ -36,7 +36,7 @@ const MessagesContainer = () => {
         throw new Error(err.message);
       }
     },
-    // refetchInterval: 8000,
+    refetchInterval: 5000,
   });
 
   // update message function

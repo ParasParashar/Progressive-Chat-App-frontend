@@ -1,15 +1,17 @@
 import { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSocketContext } from "../providers/SocketProvider";
 import peer from "../../../utils/webrtcservice";
 import { IoCall, IoVideocam, IoVideocamOff } from "react-icons/io5";
 import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi";
 import { ImPhoneHangUp } from "react-icons/im";
 import { Button } from "../ui/button";
+import { useVideoCall } from "../../../hooks/useSidebarHook";
 
 const VideoCallPage = () => {
   const navigate = useNavigate();
+  const { id: roomId } = useParams();
   const { socket } = useSocketContext();
   const [remoteSocketId, setRemoteSocketId] = useState<string | null>(null);
   const [myStream, setMyStream] = useState<MediaStream | null>(null);
@@ -17,9 +19,9 @@ const VideoCallPage = () => {
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [callStarted, setCallStarted] = useState<boolean>(false);
+  const { onvideoData } = useVideoCall();
 
   const handleUserJoined = useCallback(({ userId, socketId }: any) => {
-    console.log(`User join the room with ${userId} id`);
     setRemoteSocketId(socketId);
   }, []);
 
@@ -93,22 +95,50 @@ const VideoCallPage = () => {
     [socket]
   );
 
-  const handleNegoNeedFinal = useCallback(async ({ ans }) => {
+  const handleNegoNeedFinal = useCallback(async ({ ans }: any) => {
     await peer.setLocalDescription(ans);
   }, []);
 
   const handleEndCall = useCallback(async () => {
-    socket?.emit("call:disconnected", { to: remoteSocketId });
+    socket?.emit("call:disconnected", { to: remoteSocketId, room: roomId });
+
     if (myStream) {
-      myStream.getTracks().forEach((track) => track.stop());
+      const tracks = myStream.getTracks();
+      for (const track of tracks) {
+        track.enabled = false; // Disable the track first
+      }
       setMyStream(null);
     }
+
     peer.peer.close();
-    // peer.peer = new RTCPeerConnection(peer.peer.config); // Reinitialize the peer connection
     setRemoteStream(null);
     setRemoteSocketId(null);
     navigate("/");
+    onvideoData ? onvideoData(undefined) : null;
   }, [myStream, remoteSocketId, socket, navigate]);
+
+  const handleCallRejected = useCallback(
+    async ({ room }: any) => {
+      if (room === roomId) {
+        console.log("same room call rejected");
+
+        if (myStream) {
+          const tracks = myStream.getTracks();
+          for (const track of tracks) {
+            track.enabled = false; // Disable the track first
+          }
+          setMyStream(null);
+        }
+
+        peer.peer.close();
+        setRemoteStream(null);
+        setRemoteSocketId(null);
+        navigate("/");
+        onvideoData ? onvideoData(undefined) : null;
+      }
+    },
+    [navigate, myStream, roomId]
+  );
 
   useEffect(() => {
     peer.peer.addEventListener("track", async (ev) => {
@@ -124,7 +154,7 @@ const VideoCallPage = () => {
     socket?.on("peer:nego:needed", handleNegoNeedIncoming);
     socket?.on("peer:nego:final", handleNegoNeedFinal);
     socket?.on("call:disconnected", handleEndCall);
-
+    socket?.on("call:rejected", handleCallRejected);
     return () => {
       socket?.off("user:joined", handleUserJoined);
       socket?.off("incomming:call", handleIncomingCall);
@@ -132,6 +162,7 @@ const VideoCallPage = () => {
       socket?.off("peer:nego:needed", handleNegoNeedIncoming);
       socket?.off("peer:nego:final", handleNegoNeedFinal);
       socket?.off("call:disconnected", handleEndCall);
+      socket?.off("call:rejected", handleCallRejected);
     };
   }, [
     socket,
@@ -171,7 +202,7 @@ const VideoCallPage = () => {
   };
   useEffect(() => {
     handleCallUser();
-  }, [remoteSocketId]);
+  }, [remoteSocketId, socket]);
 
   return (
     <main className="flex flex-col bg-neutral-900 w-full h-screen gap-1 text-gray-50 overflow-hidden relative">
@@ -224,16 +255,16 @@ const VideoCallPage = () => {
                 <BiSolidMicrophone size={50} color="#60a5fa" />
               )}
             </Button>
-            <Button
-              variant="ghost"
-              size={"icon"}
-              onClick={handleEndCall}
-              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-red-500"
-            >
-              <ImPhoneHangUp size={35} color="red" />
-            </Button>
           </>
         )}
+        <Button
+          variant="ghost"
+          size={"icon"}
+          onClick={handleEndCall}
+          className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-red-500"
+        >
+          <ImPhoneHangUp size={35} color="red" />
+        </Button>
       </div>
       {remoteStream ? (
         <section className="w-full h-full flex-col gap-2 flex items-center justify-center object-fill">

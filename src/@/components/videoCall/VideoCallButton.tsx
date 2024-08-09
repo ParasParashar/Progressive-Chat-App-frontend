@@ -16,22 +16,19 @@ const VideoCallButton = () => {
     .sort((a, b) => (a! > b! ? 1 : -1))
     .join(":");
 
-  console.log(roomId);
-
   const handleClick = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault;
       socket?.emit("room:join", {
         userId: authUser?.id as string,
         room: roomId,
+        receiverId: receiverId,
+        fullname: authUser?.fullname,
       });
     },
     [socket, authUser?.id]
   );
-  // clykh5xde00006ixdaatoboyc kartik
-  // clyj07g4o00027a0vhtlah22s paras
-  // 00000000022245677aaaabcccddeghhhijklllooosttvxxyyy kartik room
-  // 0000000001122223466777aabccfghhjjlllmnoqrrstvwyyyz paras room
+
   const handleJoinRoom = useCallback(
     (data: any) => {
       navigate(`/room/${data.room}`);

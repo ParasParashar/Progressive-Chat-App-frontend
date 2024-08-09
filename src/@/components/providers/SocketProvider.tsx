@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { User } from "../../../types/type";
+import { useVideoCall } from "../../../hooks/useSidebarHook";
 
 interface socketInterface {
   socket: Socket | null;
@@ -23,10 +24,10 @@ export const SocketContextProvider = ({
   const { data: authUser, isLoading } = useQuery<User>({
     queryKey: ["authUser"],
   });
+  const { onOpen, onvideoData } = useVideoCall();
   const socketRef = useRef<Socket | null>(null);
 
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-
   useEffect(() => {
     if (!isLoading && authUser) {
       const socket = io(SOCKET_URL, {
@@ -40,10 +41,16 @@ export const SocketContextProvider = ({
         setOnlineUsers(users);
       });
 
+      // handle video call accpet or reject
+      socket.on("create:user:call", (data) => {
+        onvideoData ? onvideoData(data) : undefined;
+        onOpen();
+      });
       //   cleanup socket up function
       return () => {
         socket.close();
         socketRef.current = null;
+        socket.off("create:user:call");
       };
     } else if (!authUser && !isLoading) {
       if (socketRef.current) {

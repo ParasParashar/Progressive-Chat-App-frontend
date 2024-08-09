@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { SocketContextProvider } from "./@/components/providers/SocketProvider.tsx";
+import CallNotificationSheet from "./@/components/videoCall/CallNotificationSheet.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <SocketContextProvider>
           <App />
           <Toaster />
+          <CallNotificationSheet />
         </SocketContextProvider>
       </QueryClientProvider>
     </BrowserRouter>

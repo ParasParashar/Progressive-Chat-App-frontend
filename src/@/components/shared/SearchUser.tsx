@@ -4,6 +4,7 @@ import { Input } from "../ui/input";
 import { SearchCardType } from "../../../types/type";
 import { UserSkeleton } from "../Loaders/UserSkeleton";
 import SearchCard from "./SearchCard";
+import AxiosBase from "../../../utils/axios";
 
 const SearchUser = () => {
   const [query, setQuery] = useState("");
@@ -13,16 +14,19 @@ const SearchUser = () => {
     const endpoint = query
       ? `/api/messages/searchuser?query=${query}`
       : `/api/messages/searchuser`;
+
     try {
-      const res = await fetch(endpoint);
-      const data = await res.json();
-      if (!res.ok) {
+      const res = await AxiosBase.get(endpoint);
+      const data = res.data;
+
+      if (res.status !== 200) {
         throw new Error(data.error || "Something went wrong");
       }
       if (data?.error) throw new Error(data.error);
+
       return data;
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.response?.data?.error || error.message);
     }
   };
 

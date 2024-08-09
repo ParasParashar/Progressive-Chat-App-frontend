@@ -32,12 +32,14 @@ export default function GroupCreation() {
       ? `/api/messages/users?query=${query}`
       : `/api/messages/users`;
     try {
-      const res = await fetch(endpoint);
-      const data = await res.json();
-      if (!res.ok) {
+      const res = await AxiosBase.get(endpoint);
+      const data = res.data;
+
+      if (res.status !== 200) {
         throw new Error(data.error || "Something went wrong");
       }
       if (data?.error) throw new Error(data.error);
+
       return data;
     } catch (error: any) {
       throw new Error(error);

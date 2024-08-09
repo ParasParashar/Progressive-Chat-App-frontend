@@ -58,6 +58,7 @@ export default function App() {
         path="/room/:id"
         element={authUser ? <VideoCallPage /> : <Navigate to="/login" />}
       />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }

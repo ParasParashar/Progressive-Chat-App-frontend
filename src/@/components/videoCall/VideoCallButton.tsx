@@ -13,13 +13,14 @@ const VideoCallButton = () => {
   const navigate = useNavigate();
 
   const roomId = `${authUser?.id}:${receiverId}`;
+  const sortedRoom = roomId.replace(":", "").split("").sort().join("");
 
   const handleClick = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault;
       socket?.emit("room:join", {
         userId: authUser?.id as string,
-        room: roomId,
+        room: sortedRoom,
       });
     },
     [socket, authUser?.id]

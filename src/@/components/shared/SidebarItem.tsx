@@ -61,7 +61,7 @@ const SidebarItem = ({
       socket?.off("typing");
       socket?.off("stopTyping");
     };
-  }, [id, socket]);
+  }, [isTyping, id, socket]);
 
   useEffect(() => {
     socket?.on("groupTyping", ({ groupId, senderName }) => {

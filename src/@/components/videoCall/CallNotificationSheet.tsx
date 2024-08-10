@@ -57,7 +57,7 @@ const CallNotificationSheet = () => {
     <Sheet open={isOpen}>
       <SheetContent side={"top"} className="px-4 py-2">
         <SheetHeader>
-          <SheetTitle className="flex  items-center gap-2 text text-muted-foreground ">
+          <SheetTitle className="flex  justify-start text-md md:text-lg  items-center gap-2 text text-muted-foreground ">
             <UserAvatar name={videoData?.fullname} type="group" />
             <span className="text-black">
               {videoData?.fullname.toLocaleUpperCase()}

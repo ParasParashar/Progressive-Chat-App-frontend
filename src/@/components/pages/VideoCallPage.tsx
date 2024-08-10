@@ -184,20 +184,29 @@ const VideoCallPage = () => {
   };
 
   const toggleVideo = async () => {
-    setVideoEnabled((prev) => !prev);
-    myStream?.getVideoTracks().forEach((track) => {
-      track.enabled = !track.enabled;
-      console.log(`Video track enabled: ${track.enabled}`);
-    });
+    let videoTrack = myStream
+      ?.getTracks()
+      .find((track) => track.kind === "video") as any;
+
+    if (videoTrack.enabled) {
+      videoTrack.enabled = false;
+    } else {
+      videoTrack.enabled = true;
+    }
     await renegotiateConnection();
   };
 
+  console.log(myStream?.getTracks().find((track) => track.kind === "video"));
   const toggleAudio = async () => {
-    setAudioEnabled((prev) => !prev);
-    myStream?.getAudioTracks().forEach((track) => {
-      track.enabled = !track.enabled;
-      console.log(`Audio track enabled: ${track.enabled}`);
-    });
+    let audioTrack = myStream
+      ?.getTracks()
+      .find((track) => track.kind === "audio") as any;
+
+    if (audioTrack.enabled) {
+      audioTrack.enabled = false;
+    } else {
+      audioTrack.enabled = true;
+    }
     await renegotiateConnection();
   };
   useEffect(() => {
@@ -229,34 +238,34 @@ const VideoCallPage = () => {
             <IoCall size={60} color="red" />
           </Button>
         )}
-        {callStarted && (
-          <>
-            <Button
-              variant="ghost"
-              size={"icon"}
-              onClick={toggleVideo}
-              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
-            >
-              {videoEnabled ? (
-                <IoVideocamOff size={50} color="orange" />
-              ) : (
-                <IoVideocam size={50} color="#60a5fa" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size={"icon"}
-              onClick={toggleAudio}
-              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
-            >
-              {audioEnabled ? (
-                <BiSolidMicrophoneOff size={50} color="orange" />
-              ) : (
-                <BiSolidMicrophone size={50} color="#60a5fa" />
-              )}
-            </Button>
-          </>
-        )}
+        {/* {callStarted && ( */}
+        <>
+          <Button
+            variant="ghost"
+            size={"icon"}
+            onClick={toggleVideo}
+            className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
+          >
+            {videoEnabled ? (
+              <IoVideocamOff size={50} color="orange" />
+            ) : (
+              <IoVideocam size={50} color="#60a5fa" />
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size={"icon"}
+            onClick={toggleAudio}
+            className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
+          >
+            {audioEnabled ? (
+              <BiSolidMicrophoneOff size={50} color="orange" />
+            ) : (
+              <BiSolidMicrophone size={50} color="#60a5fa" />
+            )}
+          </Button>
+        </>
+        {/* )} */}
         <Button
           variant="ghost"
           size={"icon"}

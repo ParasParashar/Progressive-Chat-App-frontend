@@ -36,7 +36,7 @@ const Header = ({ type }: headerProps) => {
   }, [selectedConversation?.id, socket, type, isOnline]);
 
   return (
-    <header className="p-2 w-full h-16  flex items-center   gap-2  bg-gradient-to-r from-sky-50 to-indigo-200 shadow-lg">
+    <header className="p-2 sticky w-full h-16  flex items-center   gap-2  bg-gradient-to-r from-sky-50 to-indigo-200 shadow-lg">
       <div className="block lg:hidden ">
         <MobileSidebar />
       </div>

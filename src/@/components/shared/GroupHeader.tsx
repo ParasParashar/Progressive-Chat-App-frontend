@@ -44,7 +44,7 @@ export default function GroupHeader({ isAdmin }: { isAdmin: boolean }) {
   }, [isTyping, socket, selectedConversation?.id]);
 
   return (
-    <header className="p-2 w-full h-16  flex items-center   gap-2  bg-gradient-to-r from-sky-50 to-indigo-200 shadow-lg">
+    <header className="p-2 sticky w-full h-16  flex items-center   gap-2  bg-gradient-to-r from-sky-50 to-indigo-200 shadow-lg">
       <div className="block lg:hidden ">
         <MobileSidebar />
       </div>
@@ -69,7 +69,7 @@ export default function GroupHeader({ isAdmin }: { isAdmin: boolean }) {
           </div>
         </div>
         <div className="space-x-3">
-          <MenuPopover type="group" />
+          {isAdmin && <MenuPopover type="group" />}
           <Button
             variant={"destructive"}
             size={"icon2"}

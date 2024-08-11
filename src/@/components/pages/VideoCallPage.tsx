@@ -8,6 +8,7 @@ import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi";
 import { ImPhoneHangUp } from "react-icons/im";
 import { Button } from "../ui/button";
 import { useVideoCall } from "../../../hooks/useSidebarHook";
+import toast from "react-hot-toast";
 
 const VideoCallPage = () => {
   const navigate = useNavigate();
@@ -114,6 +115,7 @@ const VideoCallPage = () => {
     setRemoteStream(null);
     setRemoteSocketId(null);
     navigate("/");
+    toast.success("Call  disconnected");
     onvideoData ? onvideoData(undefined) : null;
   }, [myStream, remoteSocketId, socket, navigate]);
 
@@ -133,6 +135,7 @@ const VideoCallPage = () => {
         peer.peer.close();
         setRemoteStream(null);
         setRemoteSocketId(null);
+        toast.success("Call rejected");
         navigate("/");
         onvideoData ? onvideoData(undefined) : null;
       }
@@ -242,34 +245,34 @@ const VideoCallPage = () => {
             <IoCall size={60} color="red" />
           </Button>
         )}
-        {/* {callStarted && ( */}
-        <>
-          <Button
-            variant="ghost"
-            size={"icon"}
-            onClick={toggleVideo}
-            className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
-          >
-            {videoEnabled ? (
-              <IoVideocamOff size={50} color="orange" />
-            ) : (
-              <IoVideocam size={50} color="#60a5fa" />
-            )}
-          </Button>
-          <Button
-            variant="ghost"
-            size={"icon"}
-            onClick={toggleAudio}
-            className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
-          >
-            {audioEnabled ? (
-              <BiSolidMicrophoneOff size={50} color="orange" />
-            ) : (
-              <BiSolidMicrophone size={50} color="#60a5fa" />
-            )}
-          </Button>
-        </>
-        {/* )} */}
+        {callStarted && (
+          <>
+            <Button
+              variant="ghost"
+              size={"icon"}
+              onClick={toggleVideo}
+              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
+            >
+              {videoEnabled ? (
+                <IoVideocamOff size={50} color="orange" />
+              ) : (
+                <IoVideocam size={50} color="#60a5fa" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size={"icon"}
+              onClick={toggleAudio}
+              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
+            >
+              {audioEnabled ? (
+                <BiSolidMicrophoneOff size={50} color="orange" />
+              ) : (
+                <BiSolidMicrophone size={50} color="#60a5fa" />
+              )}
+            </Button>
+          </>
+        )}
         <Button
           variant="ghost"
           size={"icon"}

@@ -37,21 +37,23 @@ const AddUsersToGroup = ({ groupName, members, groupId }: groupProps) => {
 
   const fetchUsers = async (query: string) => {
     const endpoint = query
-      ? `/api/messages/users?query=${search}`
+      ? `/api/messages/users?query=${query}`
       : `/api/messages/users`;
+
     try {
-      const res = await fetch(endpoint);
-      const data = await res.json();
-      if (!res.ok) {
+      const res = await AxiosBase.get(endpoint);
+      const data = res.data;
+
+      if (res.status !== 200) {
         throw new Error(data.error || "Something went wrong");
       }
       if (data?.error) throw new Error(data.error);
+
       return data;
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(error.response?.data?.error || error.message);
     }
   };
-
   const { data: result, isLoading } = useQuery({
     queryKey: ["users", debouncedQuery],
     queryFn: () => fetchUsers(debouncedQuery),

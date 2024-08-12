@@ -18,7 +18,7 @@ const SearchModal = () => {
           <RiMessage3Fill size={26} />
         </div>
       </DialogTrigger>
-      <DialogContent className="w-full h-3/4 overflow-y-auto main-scrollbar z-[999999999999]">
+      <DialogContent className="w-full h-3/4 overflow-y-auto main-scrollbar z-[999999]">
         <DialogHeader>
           <DialogTitle className="text-muted-foreground">
             Start new chat

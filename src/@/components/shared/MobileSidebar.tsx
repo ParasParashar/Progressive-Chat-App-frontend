@@ -26,7 +26,7 @@ const MobileSidebar = () => {
           <BiMenu size={25} />
         </Button>
       </SheetTrigger>
-      <SheetContent side={"left"} className="p-0 w-full  z-[9999999]">
+      <SheetContent side={"left"} className="p-0 w-full  z-[50]">
         <SheetClose
           className="absolute  top-1 right-2 z-50"
           onClick={() => onClose()}

@@ -101,6 +101,7 @@ const VideoCallPage = () => {
   }, []);
 
   const handleEndCall = useCallback(async () => {
+    console.log("work call dis");
     socket?.emit("call:disconnected", { to: remoteSocketId, room: roomId });
 
     if (myStream) {
@@ -117,6 +118,8 @@ const VideoCallPage = () => {
     navigate("/");
     toast.success("Call  disconnected");
     onvideoData ? onvideoData(undefined) : null;
+    // location reload to reload the video so camera and audio close permanently
+    location.reload();
   }, [myStream, remoteSocketId, socket, navigate]);
 
   const handleCallRejected = useCallback(
@@ -138,6 +141,8 @@ const VideoCallPage = () => {
         toast.success("Call rejected");
         navigate("/");
         onvideoData ? onvideoData(undefined) : null;
+        // location reload to reload the video so camera and audio close permanently
+        location.reload();
       }
     },
     [navigate, myStream, roomId]

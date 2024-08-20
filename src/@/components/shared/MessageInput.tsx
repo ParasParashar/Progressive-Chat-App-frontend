@@ -8,6 +8,8 @@ import { useSocketContext } from "../providers/SocketProvider";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "../../../types/type";
 import { useParams } from "react-router-dom";
+import { Textarea } from "../ui/textarea";
+import toast from "react-hot-toast";
 
 const MessageInput = () => {
   const { id } = useParams();
@@ -19,18 +21,20 @@ const MessageInput = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim() !== "") {
-      mutate(message);
-      setMessage("");
-      socket?.emit("stopTyping", { senderId: authUser?.id, receiverId: id });
+    if (message.trim() == "") {
+      toast.error("Message can't be empty");
+      return;
     }
+    mutate(message);
+    setMessage("");
+    socket?.emit("stopTyping", { senderId: authUser?.id, receiverId: id });
   };
   const handleEmojiClick = (emojiObject: any, e: React.MouseEvent) => {
     e.stopPropagation();
     setMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     if (!isTyping) {
       setIsTyping(true);
@@ -39,6 +43,13 @@ const MessageInput = () => {
     if (e.target.value === "") {
       setIsTyping(false);
       socket?.emit("stopTyping", { senderId: authUser?.id, receiverId: id });
+    }
+  };
+
+  const handleKeyDonw = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
     }
   };
 
@@ -56,19 +67,21 @@ const MessageInput = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full  flex items-center justify-center 
-        border-sky-50 px-3 p-2 pb-1 gap-1 rounded-full
+      className="w-full  gap-x-1 flex items-center justify-center 
+        border-sky-50 px-3  pb-1 gap-1 rounded-full
         bg-gradient-to-l from-sky-50 to-indigo-200 
         "
     >
       <Emoji onEmojiClick={handleEmojiClick} />
-      <Input
+      <Textarea
         placeholder="Type your message"
         onChange={handleChange}
         value={message}
-        className="text-xl w-full ring-0 focus-visible:ring-0   outline-none p-3   rounded-sm border-none"
+        className="text-xl bg-transparent  h-10 resize-none main-scrollbar w-full ring-0 focus-visible:ring-0   outline-none px-3   rounded-sm border-none"
         autoFocus
         required
+        rows={1}
+        onKeyDown={handleKeyDonw}
       />
       <Button
         size={"icon"}

@@ -8,6 +8,8 @@ import { useSocketContext } from "../providers/SocketProvider";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "../../../types/type";
 import { useParams } from "react-router-dom";
+import { Textarea } from "../ui/textarea";
+import toast from "react-hot-toast";
 
 const GroupMessageInput = () => {
   const { id: groupId } = useParams();
@@ -31,7 +33,7 @@ const GroupMessageInput = () => {
     return () => clearTimeout(t);
   }, [message, isTyping]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     if (!isTyping) {
       setIsTyping(true);
@@ -63,16 +65,24 @@ const GroupMessageInput = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim() !== "") {
-      mutate(message);
-      setMessage("");
-      socket?.emit("stopGroupTyping", {
-        groupId: groupId,
-        senderName: authUser?.fullname,
-      });
+    if (message.trim() == "") {
+      toast.error("Message can't be empty");
+      return;
     }
+    mutate(message);
+    setMessage("");
+    socket?.emit("stopGroupTyping", {
+      groupId: groupId,
+      senderName: authUser?.fullname,
+    });
   };
 
+  const handleKeyDonw = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
   return (
     <form
       onSubmit={handleSubmit}
@@ -82,13 +92,14 @@ const GroupMessageInput = () => {
       "
     >
       <Emoji onEmojiClick={handleEmojiClick} />
-      <Input
+      <Textarea
         placeholder="Type your message"
         onChange={handleChange}
         value={message}
-        className="text-xl w-full ring-0 focus-visible:ring-0   outline-none p-3   rounded-sm border-none"
+        className="text-xl  bg-transparent  h-10 resize-none main-scrollbar w-full ring-0 focus-visible:ring-0   outline-none px-3   rounded-sm border-none"
         autoFocus
         required
+        onKeyDown={handleKeyDonw}
       />
       <Button
         size={"icon"}

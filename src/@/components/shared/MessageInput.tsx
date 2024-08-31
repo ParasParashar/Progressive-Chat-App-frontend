@@ -1,7 +1,6 @@
 import { BiSend } from "react-icons/bi";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import React, { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useCreateMessage } from "../../../hooks/useCreateGetMessage";
 import Emoji from "./Emoji";
 import { useSocketContext } from "../providers/SocketProvider";
@@ -11,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { Textarea } from "../ui/textarea";
 import toast from "react-hot-toast";
 
-const MessageInput = () => {
+const MessageInput = memo(() => {
   const { id } = useParams();
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
   const { socket } = useSocketContext();
@@ -93,6 +92,6 @@ const MessageInput = () => {
       </Button>
     </form>
   );
-};
+});
 
 export default MessageInput;

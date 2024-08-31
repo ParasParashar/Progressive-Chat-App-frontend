@@ -1,8 +1,7 @@
 import { BiSend } from "react-icons/bi";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import Emoji from "./Emoji";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useCreateGroupMessage } from "../../../hooks/useCreateGroupMessage";
 import { useSocketContext } from "../providers/SocketProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { Textarea } from "../ui/textarea";
 import toast from "react-hot-toast";
 
-const GroupMessageInput = () => {
+const GroupMessageInput = memo(() => {
   const { id: groupId } = useParams();
   const [message, setMessage] = useState("");
   const { mutate, isPending } = useCreateGroupMessage();
@@ -111,6 +110,6 @@ const GroupMessageInput = () => {
       </Button>
     </form>
   );
-};
+});
 
 export default GroupMessageInput;

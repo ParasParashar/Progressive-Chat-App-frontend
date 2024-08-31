@@ -21,7 +21,10 @@ const GroupInfoSidebar = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
-  const { data, isPending } = useQuery<GroupInfo>({ queryKey: ["groupInfo"] });
+  const { data, isPending } = useQuery<GroupInfo>({
+    queryKey: ["groupInfo", groupId],
+  });
+  console.log(data, "of the message");
   const { isOpen, onClose } = useGroupInfoHook();
 
   const { mutate: leaveGroup, isPending: isLeavePending } = useMutation({
@@ -75,6 +78,8 @@ const GroupInfoSidebar = () => {
     .map((user: MemberType) => user.user.id)
     .includes(authUser?.id as string);
 
+  console.log(data);
+
   return (
     <aside
       className={cn(
@@ -120,7 +125,7 @@ const GroupInfoSidebar = () => {
             ? Array.from({ length: 3 }, (_, index) => index + 1).map((item) => (
                 <UserSkeleton key={item} />
               ))
-            : data.members?.map((item: MemberType) => {
+            : data?.members?.map((item: MemberType) => {
                 return (
                   <GroupInfoCard
                     key={item.id}

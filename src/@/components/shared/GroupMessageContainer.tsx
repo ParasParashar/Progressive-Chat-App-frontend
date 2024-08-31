@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useConversation from "../../../hooks/useConversation";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { FaComments, FaSpinner } from "react-icons/fa";
+import { FaComments } from "react-icons/fa";
 import {
   GroupMessageT,
   GroupMessageType,
@@ -14,6 +14,7 @@ import AxiosBase from "../../../utils/axios";
 import { formatDayOnly } from "../../../utils/date";
 import GroupMessageCard from "./GroupMessageCard";
 import { useSocketContext } from "../providers/SocketProvider";
+import { MessagePageSkeleton } from "../Loaders/UserSkeleton";
 
 const GroupMessageContainer = () => {
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
@@ -36,7 +37,7 @@ const GroupMessageContainer = () => {
         throw new Error(err.message);
       }
     },
-    // refetchInterval: 5000,
+    refetchInterval: 5000,
   });
 
   // update ui function
@@ -187,11 +188,7 @@ const GroupMessageContainer = () => {
           </div>
         ))}
 
-      {isPending && (
-        <div className=" w-full flex  justify-center ">
-          <FaSpinner className="animate-spin text-center " size="10" />
-        </div>
-      )}
+      {isPending && <MessagePageSkeleton />}
     </div>
   );
 };

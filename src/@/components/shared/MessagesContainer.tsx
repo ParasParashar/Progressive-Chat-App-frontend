@@ -5,7 +5,7 @@ import AxiosBase from "../../../utils/axios";
 
 import useConversation from "../../../hooks/useConversation";
 import { useEffect, useRef } from "react";
-import { FaComments, FaSpinner } from "react-icons/fa";
+import { FaComments } from "react-icons/fa";
 import { useSocketContext } from "../providers/SocketProvider";
 import {
   MessageType,
@@ -14,6 +14,7 @@ import {
   UserMessageType,
 } from "../../../types/type";
 import { formatDayOnly } from "../../../utils/date";
+import { MessagePageSkeleton } from "../Loaders/UserSkeleton";
 
 const MessagesContainer = () => {
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
@@ -187,11 +188,7 @@ const MessagesContainer = () => {
             ))}
           </div>
         ))}
-      {isPending && (
-        <div className=" w-full flex  justify-center ">
-          <FaSpinner className="animate-spin text-center " size="10" />
-        </div>
-      )}
+      {isPending && <MessagePageSkeleton />}
     </main>
   );
 };

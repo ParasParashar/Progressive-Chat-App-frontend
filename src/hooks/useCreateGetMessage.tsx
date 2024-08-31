@@ -17,67 +17,6 @@ export const useCreateMessage = () => {
       if (!res.data) throw new Error("Error in sending message");
       return res.data;
     },
-    onSuccess: (data: MessageType) => {
-      queryClient.setQueryData(
-        ["conversations"],
-        (oldConversations: SidebarData[]) => {
-          const updatedCon = oldConversations.map(
-            (conversation: SidebarData) => {
-              if (conversation.id === data.conversationId) {
-                return {
-                  ...conversation,
-                  message: {
-                    body: data.body,
-                    conversationId: data.conversationId,
-                    seen: data.seen,
-                    createdAt: data.createdAt,
-                  },
-                  unseenMesssages:
-                    authUser?.id === data.senderId
-                      ? conversation.unseenMesssages
-                      : conversation.unseenMesssages + 1,
-                };
-              }
-              return conversation;
-            }
-          );
-          if (
-            !updatedCon.some(
-              (conversation) => conversation.id === data.conversationId
-            )
-          ) {
-            const senderSide = {
-              id: data.receiver?.id as string,
-              fullname: data.receiver?.fullname as string,
-              profilePic: data.receiver?.profilePic as string,
-              username: data.receiver?.username as string,
-            };
-
-            const receiverSide = {
-              id: data.sender?.id as string,
-              fullname: data.sender?.fullname as string,
-              profilePic: data.sender?.profilePic as string,
-              username: data.sender?.username as string,
-            };
-
-            updatedCon.push({
-              id: data.conversationId as string,
-              message: {
-                body: data.body,
-                conversationId: data.conversationId as string,
-                seen: data.seen,
-                createdAt: data.createdAt,
-              },
-              participants:
-                authUser?.id !== data.senderId ? receiverSide : senderSide,
-              type: "user",
-              unseenMesssages: authUser?.id === data.senderId ? 0 : 1,
-            });
-          }
-          return updatedCon;
-        }
-      );
-    },
   });
 
   const handleNewMessage = (data: MessageType) => {
@@ -107,65 +46,6 @@ export const useCreateMessage = () => {
           }
 
           return updatedConversations;
-        }
-      );
-      queryClient.setQueryData(
-        ["conversations"],
-        (oldConversations: SidebarData[]) => {
-          const updatedCon = oldConversations.map(
-            (conversation: SidebarData) => {
-              if (conversation.id === data.conversationId) {
-                return {
-                  ...conversation,
-                  message: {
-                    body: data.body,
-                    conversationId: data.conversationId,
-                    seen: data.seen,
-                    createdAt: data.createdAt,
-                  },
-                  unseenMesssages:
-                    authUser?.id === data.senderId
-                      ? conversation.unseenMesssages
-                      : conversation.unseenMesssages + 1,
-                };
-              }
-              return conversation;
-            }
-          );
-          if (
-            !updatedCon.some(
-              (conversation) => conversation.id === data.conversationId
-            )
-          ) {
-            const senderSide = {
-              id: data.receiver?.id as string,
-              fullname: data.receiver?.fullname as string,
-              profilePic: data.receiver?.profilePic as string,
-              username: data.receiver?.username as string,
-            };
-
-            const receiverSide = {
-              id: data.sender?.id as string,
-              fullname: data.sender?.fullname as string,
-              profilePic: data.sender?.profilePic as string,
-              username: data.sender?.username as string,
-            };
-
-            updatedCon.push({
-              id: data.conversationId as string,
-              message: {
-                body: data.body,
-                conversationId: data.conversationId as string,
-                seen: data.seen,
-                createdAt: data.createdAt,
-              },
-              participants:
-                authUser?.id !== data.senderId ? receiverSide : senderSide,
-              type: "user",
-              unseenMesssages: authUser?.id === data.senderId ? 0 : 1,
-            });
-          }
-          return updatedCon;
         }
       );
     }

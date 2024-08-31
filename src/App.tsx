@@ -8,8 +8,14 @@ import { useQuery } from "@tanstack/react-query";
 import PageLoader from "./@/components/Loaders/PageLoader";
 import { User } from "./types/type";
 import GroupMessagePage from "./@/components/pages/GroupMessagePage";
-import VideoCallPage from "./@/components/pages/VideoCallPage";
+// import VideoCallPage from "./@/components/pages/VideoCallPage";
 import AxiosBase from "./utils/axios";
+import React, { Suspense } from "react";
+
+// lazy loading for the video call page
+const VideoCallPage = React.lazy(
+  () => import("./@/components/pages/VideoCallPage")
+);
 
 export default function App() {
   const { data: authUser, isLoading } = useQuery<User>({
@@ -56,7 +62,15 @@ export default function App() {
       </Route>
       <Route
         path="/room/:id"
-        element={authUser ? <VideoCallPage /> : <Navigate to="/login" />}
+        element={
+          authUser ? (
+            <Suspense fallback={<PageLoader />}>
+              <VideoCallPage />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
       />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

@@ -3,8 +3,7 @@ import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocketContext } from "../providers/SocketProvider";
 import peer from "../../../utils/webrtcservice";
-import { IoCall, IoVideocam, IoVideocamOff } from "react-icons/io5";
-import { BiSolidMicrophone, BiSolidMicrophoneOff } from "react-icons/bi";
+import { IoCall } from "react-icons/io5";
 import { ImPhoneHangUp } from "react-icons/im";
 import { Button } from "../ui/button";
 import { useVideoCall } from "../../../hooks/useSidebarHook";
@@ -17,8 +16,6 @@ const VideoCallPage = () => {
   const [remoteSocketId, setRemoteSocketId] = useState<string | null>(null);
   const [myStream, setMyStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [videoEnabled, setVideoEnabled] = useState(true);
-  const [audioEnabled, setAudioEnabled] = useState(true);
   const [callStarted, setCallStarted] = useState<boolean>(false);
   const { onvideoData } = useVideoCall();
 
@@ -182,45 +179,6 @@ const VideoCallPage = () => {
     handleEndCall,
   ]);
 
-  const renegotiateConnection = async () => {
-    try {
-      const offer = await peer.getOffer();
-      socket?.emit("peer:nego:needed", { offer, to: remoteSocketId });
-    } catch (error) {
-      console.error("Renegotiation error:", error);
-    }
-  };
-
-  const toggleVideo = async () => {
-    let videoTrack = myStream
-      ?.getTracks()
-      .find((track) => track.kind === "video") as any;
-
-    if (videoTrack.enabled) {
-      videoTrack.enabled = false;
-      setVideoEnabled(false);
-    } else {
-      videoTrack.enabled = true;
-      setVideoEnabled(true);
-    }
-    await renegotiateConnection();
-  };
-
-  console.log(myStream?.getTracks().find((track) => track.kind === "video"));
-  const toggleAudio = async () => {
-    let audioTrack = myStream
-      ?.getTracks()
-      .find((track) => track.kind === "audio") as any;
-
-    if (audioTrack.enabled) {
-      audioTrack.enabled = false;
-      setAudioEnabled(false);
-    } else {
-      audioTrack.enabled = true;
-      setAudioEnabled(true);
-    }
-    await renegotiateConnection();
-  };
   useEffect(() => {
     handleCallUser();
   }, [remoteSocketId, socket]);
@@ -228,7 +186,9 @@ const VideoCallPage = () => {
   return (
     <main className="flex flex-col bg-neutral-900 w-full h-screen gap-1 text-gray-50 overflow-hidden relative">
       <h4 className="text-lg text-white text-center font-light">
-        {remoteSocketId ? "Connected" : "No one in room"}
+        {remoteSocketId
+          ? `Connected ${callStarted && "to the call"}`
+          : "No one in room"}
       </h4>
       <section className="bottom-0 left-0 absolute">
         <ReactPlayer
@@ -250,34 +210,7 @@ const VideoCallPage = () => {
             <IoCall size={60} color="red" />
           </Button>
         )}
-        {callStarted && (
-          <>
-            <Button
-              variant="ghost"
-              size={"icon"}
-              onClick={toggleVideo}
-              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
-            >
-              {videoEnabled ? (
-                <IoVideocamOff size={50} color="orange" />
-              ) : (
-                <IoVideocam size={50} color="#60a5fa" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size={"icon"}
-              onClick={toggleAudio}
-              className=" rounded-full size-10 p-2 md:p-0 md:size-20 lg:size-[120px] backdrop-blur-xl hover:bg-indigo-50/20 border border-muted-foreground"
-            >
-              {audioEnabled ? (
-                <BiSolidMicrophoneOff size={50} color="orange" />
-              ) : (
-                <BiSolidMicrophone size={50} color="#60a5fa" />
-              )}
-            </Button>
-          </>
-        )}
+
         <Button
           variant="ghost"
           size={"icon"}

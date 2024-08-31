@@ -51,7 +51,7 @@ const MessagePage = () => {
     content = (
       <>
         <Header type="message" />
-        <Suspense fallback={<MessagePageSkeleton />}>
+        <Suspense fallback={<MessagePageSkeleton type={true} />}>
           <MessagesContainer />
           <MessageInput />
         </Suspense>

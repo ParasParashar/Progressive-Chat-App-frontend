@@ -88,7 +88,7 @@ export default function GroupMessagePage() {
             <GroupMessageInput />
           </Suspense>
         </section>
-        <Suspense fallback={<MessagePageSkeleton type={false} />}>
+        <Suspense>
           <GroupInfoSidebar />
         </Suspense>
       </div>

@@ -24,7 +24,6 @@ const GroupInfoSidebar = () => {
   const { data, isPending } = useQuery<GroupInfo>({
     queryKey: ["groupInfo", groupId],
   });
-  console.log(data, "of the message");
   const { isOpen, onClose } = useGroupInfoHook();
 
   const { mutate: leaveGroup, isPending: isLeavePending } = useMutation({

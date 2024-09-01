@@ -6,8 +6,9 @@ import AxiosBase from "../../../utils/axios";
 
 import toast from "react-hot-toast";
 import { User } from "../../../types/type";
+import { memo } from "react";
 
-const SidebarFooter = () => {
+const SidebarFooter = memo(() => {
   const queryClient = useQueryClient();
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
 
@@ -68,6 +69,6 @@ const SidebarFooter = () => {
       </div>
     </div>
   );
-};
+});
 
 export default SidebarFooter;

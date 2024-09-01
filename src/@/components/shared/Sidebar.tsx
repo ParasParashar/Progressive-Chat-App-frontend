@@ -9,12 +9,14 @@ import {
   SidebarData,
   User,
 } from "../../../types/type";
-import SearchModal from "./SearchModal";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useSocketContext } from "../providers/SocketProvider";
 import SidebarFooter from "./SidebarFooter";
-import CreateGroup from "./CreateGroup";
+import { Skeleton } from "../ui/skeleton";
+
+const CreateGroup = lazy(() => import("./CreateGroup"));
+const SearchModal = lazy(() => import("./SearchModal"));
 
 export default function Sidebar() {
   const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
@@ -170,10 +172,14 @@ export default function Sidebar() {
         <Link to="/">
           <p className="text-2xl font-bold font-serif  text-center">CHAT APP</p>
         </Link>
-        <CreateGroup />
+        <Suspense fallback={<Skeleton className=" h-10 rounded-full  w-10" />}>
+          <CreateGroup />
+        </Suspense>
       </div>
       <div className="rounded-full  absolute bottom-[7rem] right-[2rem]  z-[99999]">
-        <SearchModal />
+        <Suspense fallback={<Skeleton className=" h-10 rounded-full  w-10" />}>
+          <SearchModal />
+        </Suspense>
       </div>
 
       {/* conversations */}

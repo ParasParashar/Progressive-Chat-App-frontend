@@ -42,7 +42,8 @@ const SidebarFooter = memo(() => {
           <img
             src={authUser?.profilePic}
             alt="User Image"
-            className="  rounded-full object-contain  size-12"
+            onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
+            className="opacity-0  transition-opacity duration-500  ease-in-out  rounded-full object-contain  size-12"
           />
         </div>
         <div className=" w-full">

@@ -119,7 +119,8 @@ const SidebarItem = ({
               <img
                 src={profilePic}
                 alt="User Image"
-                className="w-full h-full object-contain"
+                onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
+                className="w-full h-full object-contain opacity-0  transition-opacity duration-500  ease-in-out"
               />
               {isOnline && (
                 <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-indigo-500"></span>

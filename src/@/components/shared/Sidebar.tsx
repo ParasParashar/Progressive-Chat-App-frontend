@@ -167,7 +167,8 @@ export default function Sidebar() {
         <img
           src="/chatImage.png"
           alt="Logo"
-          className="w-10 h-10 object-cover "
+          onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
+          className="w-10 h-10 object-cover opacity-0  transition-opacity  ease-in  duration-500 "
         />
         <Link to="/">
           <p className="text-2xl font-bold font-serif  text-center">CHAT APP</p>

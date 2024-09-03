@@ -40,7 +40,7 @@ const Header = ({ type }: headerProps) => {
       <div className="block lg:hidden ">
         <MobileSidebar />
       </div>
-      {type === "message" ? (
+      {type === "message" && (
         <div className="flex items-center px-2 w-full justify-between   gap-2">
           <div className="flex items-center   gap-x-2 ">
             <div className="relative  object-fill ">
@@ -72,12 +72,6 @@ const Header = ({ type }: headerProps) => {
             <MenuPopover type="chat" />
           </div>
         </div>
-      ) : (
-        <Link to={"/"}>
-          <h5 className="text-xl text-center font-serif  font-bold">
-            Chat-app
-          </h5>
-        </Link>
       )}
     </header>
   );

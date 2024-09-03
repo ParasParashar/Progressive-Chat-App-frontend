@@ -6,7 +6,12 @@ const HomePage = () => {
       <Header type="home" />
 
       <div className="flex flex-col items-center justify-center p-8 mx-auto my-auto text-center    bg-indigo-100 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-30 rounded-lg shadow-md">
-        <img src="/chatImage.png" alt="image" />
+        <img
+          src="/chatImage.png"
+          alt="image"
+          onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
+          className="opacity-0 transition-opacity duration-500 ease-in-out"
+        />
         <h3 className="text-3xl font-serif text-white">
           Select a user to start chating💬💬💬
         </h3>
